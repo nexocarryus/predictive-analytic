@@ -11,7 +11,7 @@ Memprediksi harga rumah secara akurat memiliki nilai penting dalam berbagai aspe
 
 ### Problem Statements
 
-1. Bagaimana cara memprediksi harga rumah secara akurat berdasarkan fitur-fitur yang tersedia?
+1. Bagaimana cara memprediksi harga rumah dengan harga yang baik berdasarkan fitur-fitur yang tersedia?
 2. Fitur apa saja yang paling berpengaruh terhadap prediksi harga rumah?
 
 ### Goals
@@ -89,17 +89,25 @@ Tahapan modeling di awali dengan membuat dataframe yang akan digunakan untuk ana
 
 ## Evaluation
 
-Metrik yang digunakan dalam proyek ini adalah **Mean Absolute Error (MAE)**, metrik ini dipilih karena pertimbangan hasil EDA yang menunjukan sebaran harga rumah cenderung berkumpul di range harga rendah dan hanya sedikit rumah yang memiliki harga sangat tinggi, oleh karena itu metrik MAE cocok digunakan karena akan lebih adil dengan menilai performa model berdasarkan error rata rata secara umum dan lebih tahan dari error yang terjadi akibat adanya sedikit rumah dengan harga yang sangat tinggi dibandingkan rumah lainnya.
+Metrik yang digunakan dalam proyek ini adalah **Mean Absolute Error (MAE)**, metrik ini dipilih karena pertimbangan hasil EDA yang menunjukan sebaran harga rumah yang cenderung berkumpul di range harga rendah dan hanya sedikit rumah yang memiliki harga sangat tinggi (adanya outlier ekstrim), oleh karena itu metrik MAE cocok digunakan karena akan lebih adil dengan menilai performa model berdasarkan error rata rata secara umum dan lebih tahan dari error yang terjadi akibat adanya outlier.
 
 Formulai MAE:
 
+![image](https://github.com/user-attachments/assets/9465166c-ffeb-4e74-babd-e9784e237421)
 
+Di mana:
+- n adalah jumlah sampel dalam data
+- yi adalah nilai aktual
+- yi^ adalah nilai prediksi
 
+Cara kerja MAE:
+1. Menghitung selisih absolut: Untuk setiap sampel, akan dihitung selisih absolut antara nilai aktual dan nilai prediksi.
+2. Rata-rata selisih absolut: Hitung rata rata dari semua selisih aboulut yang telah dihitung 
 
-Hasil evaluasi:
+Setelah dilakukan tahap evaluasi terhadap ketiga model, hasil evaluasinya adalah sebagai berikut:
 
-- **Linear Regression**: MAE = ~1.1, R² = ~0.67
-- **Ridge Regression**: MAE sedikit menurun, R² meningkat sedikit dari baseline.
-- **Random Forest Regressor**: MAE = ~0.59, R² = ~0.89 → performa terbaik.
+- **Linear Regression**: train MAE = 685947.065865, test MAE =  622031.295643
+- **Random Forest**: train MAE = 538718.73195,  test MAE = 596380.0920
+- **Random Forest Regressor**: train MAE = 433662.30811, test MAE = 548786.736431
 
-Model Random Forest dipilih sebagai model akhir karena memiliki akurasi tertinggi dan generalisasi terbaik pada data validasi.
+Berdasarkan hasil tersebut, model AdaBoost ternyata adalah model terbaik dengan nilai mae (mean absolut error) yang konsisten lebih rendah dibandingkan dua model lainnya, baik pada saat proses training maupun proses testing. Sehingga dapat diketahui bahwa model AdaBoost mampu memprediksi harga rumah dengan error rata rata secara umum yang paling baik, dan model inilah yang akan dipilih untuk digunakan.
