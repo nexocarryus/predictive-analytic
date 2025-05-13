@@ -79,7 +79,7 @@ Tahapan EDA (Explatory Data Analysis) juga dilakukan dalam proyek ini, dengan ri
 
 ```
 
-- Univariate Analysis fitur categorical
+- Univariate analysis fitur categorical
   
   ![image](https://github.com/user-attachments/assets/01ff113a-04f8-426d-a74a-1c5250c298eb)
 
@@ -93,11 +93,56 @@ Tahapan EDA (Explatory Data Analysis) juga dilakukan dalam proyek ini, dengan ri
   tersebut didominasi oleh rumah yang tidak memiliki kamar tamu, basement, penghangat air, pendingin ruangan, serta area yang bukan 
   favorit pembeli. Selain itu terdapat lebih banyak rumah yang semi furnished dan unfurnised dibandingkan full furnished.
 
+- Univariate analysis fitur numeric
 
+  ![image](https://github.com/user-attachments/assets/399ec3aa-32e0-4edf-9540-8fdb53dcd10f)
 
+  ![image](https://github.com/user-attachments/assets/3f41aae8-61d7-4259-b6dc-63598570337e)
 
+  ![image](https://github.com/user-attachments/assets/3e9d4ed0-3ca5-472f-8314-26dfaeb39578)
+
+  Berdasarkan histogram dapat diketahui bahwa kebanyakan rumah yang ada memiliki 3 kamar tidur, 1 kamar mandi, 1 lantai dan tidak punya 
+  tempat parkir. Selain itu bisa dilihat juga bahwa lebih banyak rumah yang memiliki luas area yang kecil sampai menangah yaitu 
+  berpusat di sekitar 3000-4000. Faktor-faktor tersebut mengakibatkan harga rumah lebih banyak berada harga yang rendah, yaitu range 3 
+  juta sampai 4 juta, (positif skewness) hal ini tentunya akan berimplikasi ke model nantinya.
+
+- Multivariate analysis fitur categorical
+
+  ![image](https://github.com/user-attachments/assets/923cbd44-7483-482a-8fd0-013cc6c31e19)
+
+  ![image](https://github.com/user-attachments/assets/ff921ebf-286a-46d5-b31b-5ccda2201b12)
+
+  ![image](https://github.com/user-attachments/assets/3dcc31fe-0d18-40c2-ade6-3eb913d638ed)
+
+  ![image](https://github.com/user-attachments/assets/aae89140-153d-4b6d-a4f7-d5d1e7f65c62)
+
+  Dari visualisasi dapat diketahui secara jelas bahwa rumah dengan posisi yang berada di jalan utama, memiliki kamar tamu, memiliki 
+  basement, pemanas air, pendingin ruangan, berada di area yang diinginkan, dan full furnished konsisten memiliki harga yang lebih 
+  tinggi dibandingkan yang tidak memiliki faktor-faktor tersebut.
+
+- Multivariate analysis fitur numeric menggunakan pairplot
+
+  ![image](https://github.com/user-attachments/assets/6b817b59-556b-4ae9-8209-005e627b035e)
+  ![image](https://github.com/user-attachments/assets/1aa6c1fe-f2b8-4ae8-9cae-07dfb2c7480e)
+
+  terlihat jelas hubungan antara harga dengan area konsisten meningkat secara linear, sedangkan dengan fitur fitur lainnya cenderung diskrit, ini bisa dilihat dari visualisasi garis-garis vertikal karena banyak 
+  data menumpuk di titik x yang sama. Selain itu meskipun outlier sudah di atasi, distribusi price masih terlihat tidak normal, mencuat tinggi di kisaran 8 juta dan menurun tajam ke kanan. Artinya masih ada 
+  sebagian kecil rumah dengan harga sangat tinggi.
+
+  Beberapa algoritma seperti linear regression bisa terlalu terdorong oleh outlier rumah yang terlalu mahal dan dapat disimpulkan bahwa perlu adanya transformasi agar mendekati distribusi normal pada kolom 
+  target. Selain itu kondisi fitur lainnya yang diskrit membuat terkadang model linier kesulitan kalau tidak ada variasi cukup, atau jika makna angka tidak linier (misal, selisih antara 1 dan 2 parkir tidak 
+  sama dampaknya dengan 3 dan 4). Dari kondisi tersebut model seperti tree based cenderung lebih cocok seperti random forest maupun adaboost. Meskipun demikian, linear regression akan tetap dicoba dengan proses 
+  scaling dan akan dibandingkan hasilnya dengan model random forest serta adaboost. Selain itu, berdasarkan analisis yang dilakukan pada univariate maupun multivariate analysis, dapat diketahui bahwa dataset 
+  yang digunakan cenderung memiliki harga rumah yang rendah dan sangat sedikit rumah yang memiliki harga sangat tinggi (outlier), hal ini dapat disimpulkan bahwa MAE lebih cocok digunakan untuk matriks 
+  evaluasinya, sebab cenderung lebih adil dan dapat menunjukan apakah model ini lebih baik secara rata-rata umum atau tidak.
+
+- Multivariate analysis menggunakan correlation matrix
   
-- Multivariate Analysis
+  ![image](https://github.com/user-attachments/assets/ab4bbaee-7dc0-44d4-bb35-f6160d94d085)
+
+  Semua fitur numeric yang ada terlihat memiliki kontribusi atau korelasi terhadap target, meskipun tidak ada yang sangat dominan korelasinya, namun tidak ada yang berada dibawah 0. dan apabila dilihat dari 
+  visualisasi barchart sebelumnya pada multivariate analysis fitur categorical bisa dilihat juga bahwa fitur fitur tersebut selaras dengan harga, semakin lengkap fasilitas terpenuhi, semakin tinggi juga harga 
+  rumahnya. Maka dapat diputuskan bahwa semua fitur akan digunakan untuk melatih model kecuali kolom price (target)
 
 ## Data Preparation
 
@@ -161,4 +206,4 @@ Setelah dilakukan tahap evaluasi terhadap ketiga model, hasil evaluasinya adalah
 
 ![image](https://github.com/user-attachments/assets/3d1988e6-27a0-45df-8098-584d7f35cb61)
 
-Berdasarkan hasil tersebut, model AdaBoost ternyata adalah model terbaik dengan nilai mae (mean absolut error) yang konsisten lebih rendah dibandingkan dua model lainnya, baik pada saat proses training maupun proses testing. Sehingga dapat diketahui bahwa model AdaBoost mampu memprediksi harga rumah dengan error rata rata secara umum yang paling baik, dan model inilah yang akan dipilih untuk digunakan.
+Berdasarkan hasil tersebut, model AdaBoost ternyata merupakan model terbaik dengan nilai mean absolut error (MAE) yang konsisten lebih rendah dibandingkan dua model lainnya, baik pada saat proses training maupun proses testing. Sehingga dapat diketahui bahwa model AdaBoost mampu memprediksi harga rumah dengan error rata rata secara umum yang paling baik, dan model inilah yang akan dipilih untuk digunakan.
