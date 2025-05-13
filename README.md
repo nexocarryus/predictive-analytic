@@ -47,7 +47,56 @@ Data tersebut berisi 500+ baris data yang terdiri dari rincian kolom sebagai ber
 
 Tahapan EDA (Explatory Data Analysis) juga dilakukan dalam proyek ini, dengan rincian sebagai berikut:
 
-- Univariate Analysis
+- **Memeriksa deskripsi variabel dan missing value**
+  
+  ![image](https://github.com/user-attachments/assets/0f972845-2efe-4367-b774-102d260c0eb5)
+
+  ![image](https://github.com/user-attachments/assets/bae39fda-1307-47ce-a0c4-94b2722ac51d)
+  
+  Berdasarkan pemeriksaan tidak ditemukan ke anehan dalam deskripsi variabel, semua nilai yang ada pada variabel terlihat wajar, tidak ada error value serta tidak ditemukan missing value
+  
+- **Memeriksa outlier**
+  ![image](https://github.com/user-attachments/assets/0877ea32-d5c8-4ea8-bf2f-a057500375cf)
+
+  ![image](https://github.com/user-attachments/assets/c7a857da-bf6e-4d67-a6cf-d17b967d95e8)
+
+  ![image](https://github.com/user-attachments/assets/59660c6f-e4b1-4f37-ad6d-efc4c0d35310)
+
+  Setelah diperiksa, ditemukan beberapa outlier dan karena jumlah outliernya tidak terlalu banyak, dan dikhawatirkan outlier ini nantinya akan mengganggu proses pelatihan pada model, maka data yang mengandung outlier dihapus menggunakan IQR method.
+
+  pembersihan outlier dilakukan dengan code berikut:
+
+ 
+```python
+
+  numeric_cols = house.select_dtypes(include='number').columns
+  Q1 = house[numeric_cols].quantile(0.25)
+  Q3 = house[numeric_cols].quantile(0.75)
+  IQR = Q3 - Q1
+  filter_outliers = ~((house[numeric_cols] < (Q1 - 1.5 * IQR)) |
+                    (house[numeric_cols] > (Q3 + 1.5 * IQR))).any(axis=1)
+  house = house[filter_outliers]
+
+```
+
+- Univariate Analysis fitur categorical
+  
+  ![image](https://github.com/user-attachments/assets/01ff113a-04f8-426d-a74a-1c5250c298eb)
+
+  ![image](https://github.com/user-attachments/assets/d5e087d7-d005-4fb3-a4b1-b899ad187c21)
+
+  ![image](https://github.com/user-attachments/assets/39a23262-259d-4122-a0c8-969797a8a36c)
+
+  ![image](https://github.com/user-attachments/assets/bec571ca-29f4-445f-a7f1-32de28d82fbd)
+
+  Berdasarkan visualisasi, rumah yang ada pada dataset ini cenderung banyak yang berada di jalan utama. Meskipun demikian rumah-rumah 
+  tersebut didominasi oleh rumah yang tidak memiliki kamar tamu, basement, penghangat air, pendingin ruangan, serta area yang bukan 
+  favorit pembeli. Selain itu terdapat lebih banyak rumah yang semi furnished dan unfurnised dibandingkan full furnished.
+
+
+
+
+  
 - Multivariate Analysis
 
 ## Data Preparation
@@ -109,5 +158,7 @@ Setelah dilakukan tahap evaluasi terhadap ketiga model, hasil evaluasinya adalah
 - **Linear Regression**: train MAE = 685947.065865, test MAE =  622031.295643
 - **Random Forest**: train MAE = 538718.73195,  test MAE = 596380.0920
 - **Random Forest Regressor**: train MAE = 433662.30811, test MAE = 548786.736431
+
+![image](https://github.com/user-attachments/assets/3d1988e6-27a0-45df-8098-584d7f35cb61)
 
 Berdasarkan hasil tersebut, model AdaBoost ternyata adalah model terbaik dengan nilai mae (mean absolut error) yang konsisten lebih rendah dibandingkan dua model lainnya, baik pada saat proses training maupun proses testing. Sehingga dapat diketahui bahwa model AdaBoost mampu memprediksi harga rumah dengan error rata rata secara umum yang paling baik, dan model inilah yang akan dipilih untuk digunakan.
