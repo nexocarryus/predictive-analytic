@@ -12,12 +12,12 @@ Memprediksi harga rumah secara akurat memiliki nilai penting dalam berbagai aspe
 ### Problem Statements
 
 1. Bagaimana cara memprediksi harga rumah dengan harga yang baik berdasarkan fitur-fitur yang tersedia?
-2. Fitur apa saja yang paling berpengaruh terhadap prediksi harga rumah?
+2. Fitur apa saja yang berpengaruh terhadap prediksi harga rumah pada dataset yang digunakan?
 
 ### Goals
 
 1. Membangun model regresi yang mampu memprediksi harga rumah berdasarkan data.
-2. Menentukan fitur-fitur penting yang berkontribusi signifikan terhadap harga rumah.
+2. Menentukan fitur-fitur yang berkontribusi terhadap harga rumah pada dataset.
 
 ### Solution Statements
 
@@ -102,7 +102,7 @@ Tahapan EDA (Explatory Data Analysis) juga dilakukan dalam proyek ini, dengan ri
 
   Dari visualisasi dapat diketahui secara jelas bahwa rumah dengan posisi yang berada di jalan utama, memiliki kamar tamu, memiliki 
   basement, pemanas air, pendingin ruangan, berada di area yang diinginkan, dan full furnished konsisten memiliki harga yang lebih 
-  tinggi dibandingkan yang tidak memiliki faktor-faktor tersebut.
+  tinggi dibandingkan yang tidak memiliki faktor-faktor tersebut. **Sehingga dapat disimpulkan bahwa semua fitur kategorical memiliki kontribusi penting terhadap harga rumah**.
 
 - Multivariate analysis fitur numeric menggunakan pairplot
 
@@ -126,7 +126,7 @@ Tahapan EDA (Explatory Data Analysis) juga dilakukan dalam proyek ini, dengan ri
 
   Semua fitur numeric yang ada terlihat memiliki kontribusi atau korelasi terhadap target, meskipun tidak ada yang sangat dominan korelasinya, namun tidak ada yang berada dibawah 0. dan apabila dilihat dari 
   visualisasi barchart sebelumnya pada multivariate analysis fitur categorical bisa dilihat juga bahwa fitur fitur tersebut selaras dengan harga, semakin lengkap fasilitas terpenuhi, semakin tinggi juga harga 
-  rumahnya. Maka dapat diputuskan bahwa semua fitur akan digunakan untuk melatih model kecuali kolom price (target)
+  rumahnya. ** Maka dapat diputuskan bahwa semua fitur akan digunakan untuk melatih model kecuali kolom price (target), karena semua fitur yang ada pada dataset ini memiliki pengaruh dan kontribusi terhadap harga rumah.**
 
 ## Data Preparation
 
