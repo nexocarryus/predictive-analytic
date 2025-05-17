@@ -28,6 +28,7 @@ Memprediksi harga rumah secara akurat memiliki nilai penting dalam berbagai aspe
 
 ## Data Understanding
 Dataset yang digunakan bersumber dari situs kaggle yang dapat di akses di link berikut: https://www.kaggle.com/datasets/harishkumardatalab/housing-price-prediction
+
 Data tersebut berisi 545 baris data dan 12 kolom, yang terdiri dengan rincian kolom sebagai berikut:
 
 - Price: Harga rumah. (Target)
