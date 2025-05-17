@@ -126,7 +126,7 @@ Tahapan EDA (Explatory Data Analysis) juga dilakukan dalam proyek ini, dengan ri
 
   Semua fitur numeric yang ada terlihat memiliki kontribusi atau korelasi terhadap target, meskipun tidak ada yang sangat dominan korelasinya, namun tidak ada yang berada dibawah 0. dan apabila dilihat dari 
   visualisasi barchart sebelumnya pada multivariate analysis fitur categorical bisa dilihat juga bahwa fitur fitur tersebut selaras dengan harga, semakin lengkap fasilitas terpenuhi, semakin tinggi juga harga 
-  rumahnya. ** Maka dapat diputuskan bahwa semua fitur akan digunakan untuk melatih model kecuali kolom price (target), karena semua fitur yang ada pada dataset ini memiliki pengaruh dan kontribusi terhadap harga rumah.**
+  rumahnya. **Maka dapat diputuskan bahwa semua fitur akan digunakan untuk melatih model kecuali kolom price (target), karena semua fitur yang ada pada dataset ini memiliki pengaruh dan kontribusi terhadap harga rumah.**
 
 ## Data Preparation
 
@@ -152,7 +152,7 @@ Tahapan modeling di awali dengan membuat dataframe yang akan digunakan untuk ana
    
    Adapun fungsi dan parameter yang digunakan dalam membangun model ini adalah sebagai berikut:
    
-   fungsi:
+   Fungsi:
 
    - LinearRegression(): Membuat objek model regresi linear.
    - LR.fit(X_train, y_train_log): Melatih model regresi linear menggunakan data pelatihan X_train dan y_train_log.
