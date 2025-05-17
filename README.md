@@ -28,8 +28,7 @@ Memprediksi harga rumah secara akurat memiliki nilai penting dalam berbagai aspe
 
 ## Data Understanding
 Dataset yang digunakan bersumber dari situs kaggle yang dapat di akses di link berikut: https://www.kaggle.com/datasets/harishkumardatalab/housing-price-prediction
-
-Data tersebut berisi 500+ baris data yang terdiri dari rincian kolom sebagai berikut:
+Data tersebut berisi 545 baris data dan 12 kolom, yang terdiri dengan rincian kolom sebagai berikut:
 
 - Price: Harga rumah. (Target)
 - Area: Total luas rumah.
@@ -62,22 +61,7 @@ Tahapan EDA (Explatory Data Analysis) juga dilakukan dalam proyek ini, dengan ri
 
   ![image](https://github.com/user-attachments/assets/59660c6f-e4b1-4f37-ad6d-efc4c0d35310)
 
-  Setelah diperiksa, ditemukan beberapa outlier dan karena jumlah outliernya tidak terlalu banyak, dan dikhawatirkan outlier ini nantinya akan mengganggu proses pelatihan pada model, maka data yang mengandung outlier dihapus menggunakan IQR method.
-
-  pembersihan outlier dilakukan dengan code berikut:
-
- 
-```python
-
-  numeric_cols = house.select_dtypes(include='number').columns
-  Q1 = house[numeric_cols].quantile(0.25)
-  Q3 = house[numeric_cols].quantile(0.75)
-  IQR = Q3 - Q1
-  filter_outliers = ~((house[numeric_cols] < (Q1 - 1.5 * IQR)) |
-                    (house[numeric_cols] > (Q3 + 1.5 * IQR))).any(axis=1)
-  house = house[filter_outliers]
-
-```
+  Setelah diperiksa, ditemukan beberapa outlier dan karena jumlah outliernya tidak terlalu banyak, dan dikhawatirkan outlier ini nantinya akan mengganggu proses pelatihan pada model, maka data yang mengandung outlier bisa dihapus.
 
 - Univariate analysis fitur categorical
   
@@ -148,6 +132,8 @@ Tahapan EDA (Explatory Data Analysis) juga dilakukan dalam proyek ini, dengan ri
 
 Beberapa tahapan data preparation yang dilakukan pada proyek ini adalah:
 
+- **Menghapus outlier**: proses penghapusan outlier dilakukan dengan menggunakan iqr method. Penghapusan outlier adalah proses mengidentifikasi dan menghapus nilai-nilai yang secara signifikan berbeda dari nilai-nilai lain dalam dataset. Outlier dapat disebabkan oleh kesalahan pengukuran, variasi alami, atau faktor eksternal. Menghapus outlier dapat memberikan berbagai manfaat, salah satunya adalah meningkatkan akurasi model, karena outlier dapat mengganggu hasil analisis dan memberikan gambaran yang salah tentang pola dalam data. Adapun iqr method adalah teknik statistik untuk mendeteksi outlier. IQR adalah rentang antara kuartil pertama (Q1) dan kuartil ketiga (Q3) dalam dataset. Nilai-nilai yang berada di luar rentang ini dianggap sebagai outlier dan bisa difilter untuk dihapus dari data.
+
 - **Encoding fitur kategorikal**: Menggunakan One-Hot Encoding untuk fitur seperti `Furnishingstatus`, `Mainroad`, dll. One-hot encoding adalah teknik yang digunakan dalam pemrosesan data untuk mengubah data kategorikal menjadi bentuk yang dapat dipahami oleh algoritma machine learning. Teknik ini merepresentasikan setiap kategori sebagai vektor biner yang bernilai 0 dan 1, di mana hanya satu elemen yang bernilai 1 dan sisanya bernilai 0. Hal ini perlu dilakukan karena algoritma machine learning tidak dapat memproses data kategorikal secara langsung. One-hot encoding mengubah data tersebut menjadi bentuk numerik yang dapat diproses oleh algoritma
 
   
@@ -160,26 +146,129 @@ sangat terbiasa dengan data yang sudah dipelajarinya, tetapi tidak bekerja denga
 
 ## Modeling
 
-Tahapan modeling di awali dengan membuat dataframe yang akan digunakan untuk analisis model. Selanjutnya akan dibangun 3 buah model berbeda yaitu Linear Regression, Random Forest, dan AdaBoost.
+Tahapan modeling di awali dengan membuat dataframe yang akan digunakan untuk analisis model. Selanjutnya dibangun 3 buah model berbeda yaitu Linear Regression, Random Forest, dan AdaBoost.
 
 1. **Model development Linear Regression**: Linear regression adalah metode statistik yang digunakan untuk memodelkan hubungan antara satu variabel dependen (yang ingin diprediksi) dan satu atau lebih variabel independen (yang digunakan untuk memprediksi). Metode ini berusaha menemukan garis lurus yang paling sesuai dengan data, yang dapat digunakan untuk memprediksi nilai variabel dependen berdasarkan nilai variabel independen. Kelebihan dari model ini adalah sederhana dan mudah dipahami serta efisien untuk hubungan linear, sebab pada saat dilakukan EDA terdapat variabel area yang linear dengan variabel price (target) maka dari itu model ini patut untuk dicoba, akan tetapi model ini memiliki kekurangan yaitu sensitif terhadap outlier dan tidak efektif untuk hubungan non linear.
    
-   Adapun tahapan dan parameter yang digunakan dalam membangun model ini adalah sebagai berikut:
+   Adapun fungsi dan parameter yang digunakan dalam membangun model ini adalah sebagai berikut:
+   
+   fungsi:
 
-   Model diinisialisasi menggunakan LinearRegression() dari pustaka sklearn.linear_model, kemudian dilatih menggunakan data pelatihan X_train dan y_train_log. Setelah proses pelatihan selesai, model digunakan untuk memprediksi nilai target dalam bentuk log (y_pred_log), yang kemudian dikembalikan ke skala aslinya menggunakan fungsi np.expm1(). Evaluasi performa dilakukan dengan menghitung nilai Mean Absolute Error (MAE) antara nilai aktual (y_train) dan hasil prediksi yang telah dikembalikan ke skala aslinya (y_pred). Nilai MAE ini kemudian disimpan dalam DataFrame models untuk keperluan dokumentasi dan perbandingan model.
+   - LinearRegression(): Membuat objek model regresi linear.
+   - LR.fit(X_train, y_train_log): Melatih model regresi linear menggunakan data pelatihan X_train dan y_train_log.
+   - LR.predict(X_train): Memprediksi nilai target menggunakan model yang telah dilatih.
+   - np.expm1(y_pred_log): Mengubah prediksi logaritma kembali ke skala asli menggunakan fungsi eksponensial minus satu (expm1).
+   - mean_absolute_error(y_train, y_pred): Menghitung Mean Absolute Error (MAE) antara nilai target asli y_train dan prediksi y_pred.
+   - models.loc['train_mae','LinearRegression'] = mae: Menyimpan nilai MAE ke dalam DataFrame models pada lokasi yang ditentukan.
+     
+   Parameter:
+   
+   - X_train: Data fitur untuk pelatihan.
+   - y_train_log: Data target yang telah ditransformasi menggunakan logaritma.
+   - y_pred_log: Prediksi yang masih dalam skala logaritma.
+   - y_train: Nilai target asli.
+   - y_pred: Nilai prediksi yang telah dikembalikan ke skala asli.
+   - 'train_mae': Indeks baris.
+   - 'LinearRegression': Indeks kolom.
+   - mae: Nilai MAE yang dihitung.
+         
+    
+3. **Random Forest Regressor**: Random Forest Regressor adalah algoritma machine learning berbasis ensemble yang digunakan untuk memprediksi nilai numerik atau kontinu. Algoritma ini bekerja dengan membangun beberapa decision trees (pohon keputusan) dari subset data dan fitur yang dipilih secara acak. Hasil prediksi akhir diperoleh dengan menghitung rata-rata dari semua prediksi pohon yang dibangun. kelebihan dari algoritma ini adalah tahan terhadap overfitting dan kuat terhadap outlier. Namun kekurangannya adalah kompleksitas dan memori yang diperlukan bisa sangat banyak akrena membangun banyak pohon.
 
-2. **Random Forest Regressor**: Random Forest Regressor adalah algoritma machine learning berbasis ensemble yang digunakan untuk memprediksi nilai numerik atau kontinu. Algoritma ini bekerja dengan membangun beberapa decision trees (pohon keputusan) dari subset data dan fitur yang dipilih secara acak. Hasil prediksi akhir diperoleh dengan menghitung rata-rata dari semua prediksi pohon yang dibangun. kelebihan dari algoritma ini adalah tahan terhadap overfitting dan kuat terhadap outlier. Namun kekurangannya adalah kompleksitas dan memori yang diperlukan bisa sangat banyak akrena membangun banyak pohon.
+   Pada model ini terdapat beberapa fungsi dan parameter yang digunakan, dengan rincian sebagai berikut:
 
-   Tahapan dan parameter yang digunakan dalam model ini ialah di awali inisiasi model dasar  dengan RandomForestRegressor(random_state=42) untuk memastikan hasil yang konsisten. Selanjutnya, dilakukan pencarian hyperparameter menggunakan RandomizedSearchCV dengan ruang parameter (param_dist) yang mencakup: n_estimators (jumlah pohon dalam hutan), max_depth (kedalaman maksimum pohon), min_samples_split (jumlah minimum sampel untuk membagi node), min_samples_leaf (jumlah minimum sampel pada daun pohon), dan max_features (jumlah fitur yang dipertimbangkan saat mencari split terbaik). Pencarian dilakukan sebanyak 30 iterasi (n_iter=30) menggunakan validasi silang sebanyak 5 lipatan (cv=5) dengan skor evaluasi berupa negative mean absolute error (scoring='neg_mean_absolute_error'). Proses ini diparalelkan ke seluruh core (n_jobs=-1) dan ditampilkan secara verbose.
-  Model terbaik hasil pencarian disimpan dalam variabel best_rf, yang kemudian digunakan untuk memprediksi nilai target dalam bentuk log (y_pred_log). Prediksi ini dikembalikan ke skala semula menggunakan np.expm1(), lalu dievaluasi menggunakan Mean Absolute Error terhadap data pelatihan (y_train). Nilai MAE ini disimpan dalam DataFrame models untuk keperluan perbandingan antar model. Parameter terbaik dari hasil pencarian juga dicetak sebagai informasi tambahan.
+   Fungsi:
+   
+   - RandomForestRegressor(random_state=42): Membuat objek model Random Forest Regressor.
+   - param_dist: Dictionary yang berisi parameter dan nilai yang akan dicoba dalam pencarian acak.
+   - RandomizedSearchCV: Melakukan pencarian acak untuk menemukan kombinasi parameter terbaik.
+   - random_search.fit(X_train, y_train_log): Melatih model menggunakan pencarian acak dengan data pelatihan X_train dan y_train_log.
+   - random_search.best_estimator_: Mendapatkan model terbaik berdasarkan pencarian acak.
+   - best_rf.predict(X_train): Memprediksi nilai target menggunakan model terbaik yang telah dilatih.
+   - np.expm1(y_pred_log): Mengubah prediksi logaritma kembali ke skala asli menggunakan fungsi eksponensial minus satu (expm1).
+   - mean_absolute_error(y_train, y_pred): Menghitung Mean Absolute Error (MAE) antara nilai target asli y_train dan prediksi y_pred.
+   - models.loc['train_mae', 'RandomForest'] = mae: Menyimpan nilai MAE ke dalam DataFrame models pada lokasi yang ditentukan.
+   - random_search.best_params_: memanggil parameter terbaik yang ditemukan oleh pencarian acak.
+     
+   Parameter:
+   - random_state=42: Menetapkan seed untuk memastikan hasil yang dapat direproduksi.
+   - n_estimators: jumlah pohon dalam hutan yang dibuat
+   - max_depth : kedalaman maksimum masing masing pohon
+   - min_samples_split : jumlah minimum sampel untuk membagi node
+   - min_samples_leaf : jumlah minimum sampel pada daun pohon
+   - max_features : jumlah fitur yang dipertimbangkan saat mencari split terbaik
+   - estimator=base_model: Model dasar yang akan dioptimalkan.
+   - param_distributions=param_dist: Distribusi parameter yang akan dicoba.
+   - n_iter=30: Jumlah iterasi pencarian acak.
+   - cv=5: Jumlah fold dalam cross-validation.
+   - scoring='neg_mean_absolute_error': Metrik yang digunakan untuk mengevaluasi model.
+   - random_state=42: Menetapkan seed untuk memastikan hasil yang dapat direproduksi.
+   - n_jobs=-1: Menggunakan semua core prosesor yang tersedia.
+   - verbose=1: Menampilkan informasi proses pencarian.
+   - X_train: Data fitur untuk pelatihan.
+   - y_train_log: Data target yang telah ditransformasi menggunakan logaritma.
+   - y_pred_log: Prediksi yang masih dalam skala logaritma.
+   - y_train: Nilai target asli.
+   - y_pred: Nilai prediksi yang telah dikembalikan ke skala asli.
+   - 'train_mae': Indeks baris.
+   - 'RandomForest': Indeks kolom.
+   - mae: Nilai MAE yang dihitung.
 
-4. **AdaBoost Regressor**: Merupakan algoritma machine learning berbasis ensemble yang digunakan untuk meningkatkan akurasi model prediktif dengan menggabungkan beberapa model sederhana (weak learners) menjadi satu model yang lebih kuat (strong learner). Algoritma ini bekerja dengan memberikan bobot lebih tinggi pada data yang salah diprediksi oleh model sebelumnya, sehingga model berikutnya lebih fokus pada kesalahan tersebut. Kelebihannya adalah dapat mengatasi data kompleks dan interaksi antar fitur serta dapat mencegah overfitting. Namun kekurangannya memerlukan waktu komputasi yang lebih lama dan kurang efisien untuk dataset sangat besar karena kompleksitas komputasinya.
+   Setelah proses hyperparameter tunning selesai dilakukan, dapat diketahui bahwa nilai parameter terbaik untuk model yang sudah dicari
+   sebelumnya adalah sebagai berikut:
+   - n_estimators: 150
+   - max_depth : 10
+   - min_samples_split : 10
+   - min_samples_leaf : 1
+   - max_features : log2
 
-   Pada proyek ini model ini dibangun menggunakan algoritma AdaBoost Regressor dengan Decision Tree Regressor sebagai estimator dasarnya. Model awal diinisialisasi dengan AdaBoostRegressor(estimator=DecisionTreeRegressor(), random_state=42) untuk memastikan reprodusibilitas hasil. Untuk memperoleh performa optimal, dilakukan tuning hiperparameter menggunakan RandomizedSearchCV dengan ruang parameter (param_dist) yang mencakup: n_estimators (jumlah estimator boosting), learning_rate (tingkat kontribusi setiap estimator), serta parameter dari decision tree seperti estimator__max_depth, estimator__min_samples_split, dan estimator__min_samples_leaf. Proses pencarian dilakukan sebanyak 30 iterasi (n_iter=30) dengan validasi silang sebanyak 5 lipatan (cv=5) dan menggunakan negative mean absolute error sebagai metrik evaluasi (scoring='neg_mean_absolute_error'). Seluruh proses dilakukan secara paralel pada semua inti CPU (n_jobs=-1) dan ditampilkan secara rinci (verbose=1).
+3. **AdaBoost Regressor**: Merupakan algoritma machine learning berbasis ensemble yang digunakan untuk meningkatkan akurasi model prediktif dengan menggabungkan beberapa model sederhana (weak learners) menjadi satu model yang lebih kuat (strong learner). Algoritma ini bekerja dengan memberikan bobot lebih tinggi pada data yang salah diprediksi oleh model sebelumnya, sehingga model berikutnya lebih fokus pada kesalahan tersebut. Kelebihannya adalah dapat mengatasi data kompleks dan interaksi antar fitur serta dapat mencegah overfitting. Namun kekurangannya memerlukan waktu komputasi yang lebih lama dan kurang efisien untuk dataset sangat besar karena kompleksitas komputasinya.
 
-   Model terbaik yang ditemukan dari pencarian disimpan dalam variabel best_adaboost, yang kemudian digunakan untuk memprediksi nilai target dalam bentuk log (y_pred_log). Hasil prediksi tersebut dikembalikan ke skala aslinya menggunakan np.expm1(), lalu dievaluasi menggunakan metrik Mean Absolute Error terhadap data pelatihan (y_train). Nilai MAE ini dicatat dalam DataFrame models untuk keperluan evaluasi dan perbandingan antar model. Parameter terbaik hasil tuning juga ditampilkan sebagai referensi.
+   Adapun fungsi dan parameter yang digunakan dalam model ini adalah sebagai berikut:
 
+   Fungsi:
+   - AdaBoostRegressor(estimator=DecisionTreeRegressor(), random_state=42): Membuat objek model AdaBoost Regressor dengan Decision Tree
+     sebagai estimator dasar.
+   - param_dist: Dictionary yang berisi parameter dan nilai yang akan dicoba dalam pencarian acak.
+   - RandomizedSearchCV: Melakukan pencarian acak untuk menemukan kombinasi parameter terbaik.
+   - random_search.fit(X_train, y_train_log): Melatih model menggunakan pencarian acak dengan data pelatihan X_train dan y_train_log.
+   - andom_search.best_estimator_: Mendapatkan model terbaik berdasarkan pencarian acak.
+   - best_adaboost.predict(X_train): Memprediksi nilai target menggunakan model terbaik yang telah dilatih.
+   - np.expm1(y_pred_log): Mengubah prediksi logaritma kembali ke skala asli menggunakan fungsi eksponensial minus satu (expm1).
+   - mean_absolute_error(y_train, y_pred) : Menghitung Mean Absolute Error (MAE) antara nilai target asli y_train dan prediksi y_pred.
+   - models.loc['train_mae', 'AdaBoost_Tuned'] = mae: Menyimpan nilai MAE ke dalam DataFrame models pada lokasi yang ditentukan
+   - random_search.best_params_: Memanggil parameter terbaik yang ditemukan oleh pencarian acak.
 
+   Parameter:
+   - estimator=DecisionTreeRegressor(): Menetapkan Decision Tree sebagai estimator dasar.
+   - random_state=42: Menetapkan seed untuk memastikan hasil konsisten yang dapat direproduksi.
+   - n_estimators: Jumlah estimator (pohon) dalam ensemble.
+   - learning_rate: Tingkat pembelajaran yang mengontrol kontribusi setiap estimator.
+   - estimator__max_depth: Kedalaman maksimum pohon dalam estimator dasar.
+   - estimator__min_samples_split: Jumlah minimum sampel yang diperlukan untuk membagi node dalam estimator dasar.
+   - estimator__min_samples_leaf: Jumlah minimum sampel yang diperlukan di setiap daun node dalam estimator dasar.
+   - estimator=base_model: Model dasar yang akan dioptimalkan.
+   - param_distributions=param_dist: Distribusi parameter yang akan dicoba.
+   - n_iter=30: Jumlah iterasi pencarian acak.
+   - cv=5: Jumlah fold dalam cross-validation.
+   - scoring='neg_mean_absolute_error': Metrik yang digunakan untuk mengevaluasi model.
+   - n_jobs=-1: Menggunakan semua core prosesor yang tersedia.
+   - verbose=1: Menampilkan informasi proses pencarian.
+   - X_train: Data fitur untuk pelatihan.
+   - y_train_log: Data target yang telah ditransformasi menggunakan logaritma.
+   - y_pred_log: Prediksi yang masih dalam skala logaritma.
+   - y_train: Nilai target asli.
+   - y_pred: Nilai prediksi yang telah dikembalikan ke skala asli.
+   - train_mae': Indeks baris.
+   - 'AdaBoost_Tuned': Indeks kolom.
+   - mae: Nilai MAE yang dihitung.
+
+   Setelah dilakukan hyperparameter tunning, ditemukan parameter terbaik untuk model ini adalah sebagai berikut:
+   - n_estimators: 50
+   - learning_rate: 0.01
+   - estimator__max_depth: 7
+   - estimator__min_samples_split: 10
+   - estimator__min_samples_leaf: 1
 
 ## Evaluation
 
