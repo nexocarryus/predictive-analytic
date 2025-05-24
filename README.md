@@ -290,10 +290,11 @@ Cara kerja MAE:
 
 Setelah dilakukan tahap evaluasi terhadap ketiga model, hasil evaluasinya adalah sebagai berikut:
 
-- **Linear Regression**: train MAE = 685947.065865, test MAE =  622031.295643
+- **Adaboost**: train MAE = 433662.30811, test MAE = 548786.736431
 - **Random Forest**: train MAE = 538718.73195,  test MAE = 596380.0920
-- **Random Forest Regressor**: train MAE = 433662.30811, test MAE = 548786.736431
+- **Linear Regression**: train MAE = 685947.065865, test MAE =  622031.295643
+
 
 ![image](https://github.com/user-attachments/assets/3d1988e6-27a0-45df-8098-584d7f35cb61)
 
-Berdasarkan hasil tersebut, model AdaBoost ternyata merupakan model terbaik dengan nilai mean absolut error (MAE) yang konsisten lebih rendah dibandingkan dua model lainnya, baik pada saat proses training maupun proses testing. Sehingga dapat diketahui bahwa model AdaBoost mampu memprediksi harga rumah dengan error rata rata secara umum yang paling baik, dan model inilah yang akan dipilih untuk digunakan.
+Berdasarkan hasil tersebut, model AdaBoost ternyata merupakan model terbaik dengan nilai mean absolut error (MAE) pada proses training sebesar  433662.30811 dan testing sebesar 548786.736431, nilai ini lebih rendah dibandingkan dua model lainnya, baik pada saat proses training maupun proses testing. Model random forest memiliki nilai MAE sebesar  538718.73195 pada training dan 596380.0920 pada testing, sedangkan model linear regression memiliki nilai MAE sebesar 685947.065865 pada training dan 622031.295643 pada testing. Sehingga dapat diketahui bahwa model AdaBoost mampu memprediksi harga rumah dengan error rata rata secara umum yang paling baik, serta model inilah yang akan dipilih untuk digunakan.
